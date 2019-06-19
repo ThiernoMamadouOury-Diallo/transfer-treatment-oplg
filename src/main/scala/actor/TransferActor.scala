@@ -39,6 +39,7 @@ class TransferActor extends Actor with ActorLogging with JsonSupport {
       sender() ! DatabaseService.getTransferById(id)
 
     case UpdateTransferStatus(id, status) =>
+      DatabaseService.updateTransfer(id.toInt, status.value)
       val transferUpdate = TransferUpdateEvent(DatabaseService.getTransferById(id), status)
       MessagingService.publish(transferUpdate.toJson.prettyPrint)
       sender() ! ActionPerformed(s"Transfer $id updated with status '${status.value}'.")
